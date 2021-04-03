@@ -138,13 +138,14 @@ def add_new_patient():
 
 @app.route("/pat_login",methods = ["POST"])
 def patient_login():
-	if request.method == "POST":
-		Org_Data = pymongo.collection.Collection(db, 'Patient_data')
+	
+		pat_Data = pymongo.collection.Collection(db, 'Patient_data')
+		print(pat_Data)
 		inputData = dict(request.form)
-		for i in json.loads(dumps(Org_Data.find())):
+		for i in json.loads(dumps(pat_Data.find())):
 			if i['email'] == inputData['email'] and i['password'] == inputData['password']:
-				session['email'] = inputData['email']
-				return render_template("orgdashboard.html")
+				session['name'] = inputData['name']
+				return "Hello"
 		return Response(status=403)
 	
 
