@@ -250,7 +250,7 @@
         <div class="row justify-content-center">
             <div class="media-container-column col-lg-8" >
                 <!---Formbuilder Form--->
-                <form  action="{{url_for('add_new_patient')}}" class="mbr-form form-with-styler" data-form-title="Mobirise Form" id="newDonorForm" >
+                <form  action="{{url_for('add_new_patient')}}" class="mbr-form form-with-styler" data-form-title="Mobirise Form" id="newPatientForm" >
 
                     <div class="row">
                         <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Successfully Registered!</div>
@@ -260,6 +260,10 @@
                         <div class="col-md-6  form-group" data-for="name">
                             <label for="name-form1-8" class="form-control-label mbr-fonts-style display-7">Name</label>
                             <input type="text" name="name" data-form-field="Name" required="required" class="form-control display-7" id="name-form1-8">
+                        </div>
+                        <div class="col-md-6  form-group" data-for="name">
+                            <label for="name-form1-8" class="form-control-label mbr-fonts-style display-7">Password</label>
+                            <input type="password" name="password" data-form-field="Password" required="required" class="form-control display-7" id="name-form1-8">
                         </div>
                         <div class="col-md-6  form-group" data-for="email">
                             <label for="email-form1-8" class="form-control-label mbr-fonts-style display-7">Email</label>
@@ -303,7 +307,7 @@
         <div class="row justify-content-center">
             <div class="media-container-column col-lg-8" >
                 <!---Formbuilder Form--->
-                <form class="mbr-form form-with-styler" data-form-title="Mobirise Form" id="newDonorForm">
+                <form class="mbr-form form-with-styler" data-form-title="Mobirise Form" action="/add_new_user" id="newDonorForm">
 
                     <div class="row">
                         <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Successfully Registered!</div>

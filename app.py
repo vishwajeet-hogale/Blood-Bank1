@@ -129,17 +129,24 @@ def org_dash():
 
 @app.route('/add_new_patient', methods=['POST'])
 def add_new_patient():
-    inputData = dict(request.form)
-    Donor_Data = pymongo.collection.Collection(db, 'Patient_Data')
-    Donor_Data.insert_one(inputData)
-    return Response(status=200)
+	print("Hello")
+	inputData = dict(request.form)
+	patient_Data = pymongo.collection.Collection(db, 'Patient_data')
+	patient_Data.insert_one(inputData)
+	return Response(status=200)
 
 
-@app.route("/pat_login",methods = ["POST","GET"])
+@app.route("/pat_login",methods = ["POST"])
 def patient_login():
 	if request.method == "POST":
-		pass
-	pass
+		Org_Data = pymongo.collection.Collection(db, 'Patient_data')
+		inputData = dict(request.form)
+		for i in json.loads(dumps(Org_Data.find())):
+			if i['email'] == inputData['email'] and i['password'] == inputData['password']:
+				session['email'] = inputData['email']
+				return render_template("orgdashboard.html")
+		return Response(status=403)
+	
 
 
 if __name__=="__main__":
