@@ -15,8 +15,9 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret_key = b'\xd2(*K\xa0\xa8\x13]g\x1e9\x88\x10\xb0\xe0\xcc'
 
 #Loads the Database and Collections
-mongo = pymongo.MongoClient('mongodb+srv://srujan:mongodb@bloodbridge1-8kivy.gcp.mongodb.net/test?retryWrites=true&w=majority', maxPoolSize=50, connect=True)
-db = pymongo.database.Database(mongo, 'BloodBridge1')
+mongo = pymongo.MongoClient("mongodb+srv://vishwajeet:Mjklop@cluster0.pkcgw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+
+db = mongo["Blood-Bank"]
 
 #Home page
 @app.route('/')
@@ -125,5 +126,21 @@ def org_login():
 @app.route('/org_dash')
 def org_dash():
     return render_template('orgdashboard.html')
+
+@app.route('/add_new_patient', methods=['POST'])
+def add_new_patient():
+    inputData = dict(request.form)
+    Donor_Data = pymongo.collection.Collection(db, 'Patient_Data')
+    Donor_Data.insert_one(inputData)
+    return Response(status=200)
+
+
+@app.route("/pat_login",methods = ["POST","GET"])
+def patient_login():
+	if request.method == "POST":
+		pass
+	pass
+
+
 if __name__=="__main__":
 	app.run(debug=True)
