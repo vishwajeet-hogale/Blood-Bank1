@@ -1,7 +1,7 @@
 import pymongo
 from bson.json_util import dumps
 import json
-from flask import Flask, request, render_template, session, redirect, url_for, flash, Response, abort, render_template_string, send_from_directory
+from flask import Flask, request, render_template, session, redirect, g,url_for, flash, Response, abort, render_template_string, send_from_directory
 from flask_cors import CORS
 from PIL import Image
 from io import StringIO
@@ -135,20 +135,33 @@ def add_new_patient():
 	patient_Data.insert_one(inputData)
 	return Response(status=200)
 
-
-@app.route("/pat_login",methods = ["POST"])
+@app.before_request
+def before_request():
+    g.email = None
+    if 'email' in session:
+        g.name = session["email"] 
+@app.route("/pat_login",methods = ["POST","GET"])
 def patient_login():
-	
-		pat_Data = pymongo.collection.Collection(db, 'Patient_data')
-		print(pat_Data)
-		inputData = dict(request.form)
-		for i in json.loads(dumps(pat_Data.find())):
-			if i['email'] == inputData['email'] and i['password'] == inputData['password']:
-				session['name'] = inputData['name']
-				return "Hello"
-		return Response(status=403)
-	
-
+		if request.method == "POST":
+			pat_Data = pymongo.collection.Collection(db, 'Patient_data')
+			print(pat_Data.find())
+			inputData = dict(request.form)
+			for i in json.loads(dumps(pat_Data.find())):
+				print(i)
+				if i['email'] == inputData['email'] and i['password'] == inputData['password']:
+					print(inputData["email"])
+					session['email'] = inputData['email']
+					return render_template("dashboard.html",user=session["email"])
+		return render_template("pat_login.html")
+@app.route("/dashboard")
+def dashboard():
+    if g.email:
+        return render_template("dashboard.html",user = session["email"])
+    return redirect(url_for("org_lander"))
+@app.route("/signout")
+def signout():
+    session.pop("email",None)
+    return redirect(url_for("org_lander"))
 
 if __name__=="__main__":
 	app.run(debug=True)

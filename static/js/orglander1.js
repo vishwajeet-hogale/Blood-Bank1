@@ -1,19 +1,5 @@
 $(function(){
-    $('#patLoginForm').submit(function(e){
-        //e.preventDefault();
-        $.ajax({
-            url:'/pat_login',
-            type:'post',
-            data:$('#patLoginForm').serialize(),
-            success:function(){
-                $('#patLoginSuccess').removeAttr('hidden');
-                $('#patLoginForm')[0].reset();
-            },
-            error:function(){
-                $('#patLoginFailure').removeAttr('hidden');
-            }
-        });
-    });
+    
   $('#newOrgForm').submit(function(e){
       e.preventDefault();
       $.ajax({
