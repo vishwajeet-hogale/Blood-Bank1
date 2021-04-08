@@ -157,26 +157,31 @@ def add_new_patient():
 @app.route("/accepted/<email>",methods=["GET","POST"])
 def accepted(email):
 	if request.method == "POST":
-		# Form stuff
 		pass
 	
 	all_donors = sc.get_all_donors_from_organization(session["email"])
-	return render_template("donor.html")
+	return render_template("donor.html",email = session["email"])
 @app.route("/add_blood",methods=["POST"])
 def add_blood():
+	# print(email)
 	inputData = dict(request.form)
 	Bloodunit_Data = pymongo.collection.Collection(db, 'Bloodunit')
-	b = list(Bloodunit_Data.find().limit(1))
+	type_of_blood = sc.get_donor_bloodgroup_by_email(email=inputData["email"])
+	print(type_of_blood)
+	b = list(Bloodunit_Data.find({"type":type_of_blood}).limit(1))
 	if(b == []):
-		Bloodunit_Data.insert_one(inputData)
+		
+		Bloodunit_Data.insert_one({"units":inputData["units"],"type":type_of_blood})
+		return Response(status=200)
 	else:
 
 		old_val = int(b[0]["units"])
-		print(old_val)
-		query = {"units":b[0]["units"]}
+		
+		query = {"units":b[0]["units"],"type":type_of_blood}
 		new_update = {"$set":{"units":old_val+int(inputData["units"])}}
 		Bloodunit_Data.update_one(query,new_update)
 		return Response(status=200)
+	
 	
 	
 if __name__=="__main__":

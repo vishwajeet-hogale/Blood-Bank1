@@ -27,3 +27,8 @@ def get_all_donors_from_organization(email:str):
 	Donor_data = pymongo.collection.Collection(db, 'Donor_Data')
 	data = json.loads(dumps(Donor_data.find({"organization":org})))
 	return data
+def get_donor_bloodgroup_by_email(email:str):
+	donor = pymongo.collection.Collection(db,"Donor_Data")
+	don = list(donor.find({"email":email}).limit(1))
+	print(don)
+	return don[0]["bloodgroup"]
