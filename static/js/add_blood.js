@@ -3,7 +3,7 @@ $(function () {
         e.preventDefault();
         data = $('#addbloodForm').serialize();
         $.ajax({
-            url: '/add_new_drive',
+            url: '/add_blood',
             type: 'post',
             data: data,
             success: function () {
