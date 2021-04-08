@@ -7,11 +7,11 @@ $(function () {
             type: 'post',
             data: data,
             success: function () {
-                $('#newDriveSuccess').removeAttr('hidden');
-                $('#newDrive')[0].reset();
+                $('#addbloodinSuccess').removeAttr('hidden');
+                $('#addbloodForm')[0].reset();
             },
             error: function () {
-                $('#newDriveFailure').removeAttr('hidden');
+                $('#addbloodinFailure').removeAttr('hidden');
             }
         });
     });
