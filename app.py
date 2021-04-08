@@ -5,6 +5,7 @@ from flask import Flask, request, render_template, session, redirect, g,url_for,
 from flask_cors import CORS
 from PIL import Image
 from io import StringIO
+import services as sc
 import base64
 import requests
 import random
@@ -18,6 +19,7 @@ app.secret_key = b'\xd2(*K\xa0\xa8\x13]g\x1e9\x88\x10\xb0\xe0\xcc'
 mongo = pymongo.MongoClient("mongodb+srv://vishwajeet:Mjklop@cluster0.pkcgw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 
 db = mongo["Blood-Bank"]
+
 
 #Home page
 @app.route('/')
@@ -36,7 +38,15 @@ def add_new_user():
     Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
     Donor_Data.insert_one(inputData)
     return Response(status=200)
-
+@app.before_request  #The before_request decorator allows us to create a function that will run before each request.
+def before_request():
+    g.email = None
+    if 'email' in session:
+        g.email = session["email"] 
+@app.route("/signout") #Helps you end the session i.e logs you out
+def signout():
+    session.pop("email",None)
+    return redirect(url_for("org_lander"))
 #Org landing page
 @app.route('/org_lander')
 def org_lander():
@@ -112,20 +122,27 @@ def get_donors():
 	return data1
 
 #Org login
-@app.route('/org_login', methods=['POST'])
+@app.route('/org_login', methods=['POST',"GET"])
 def org_login():
-	Org_Data = pymongo.collection.Collection(db, 'Org_Data')
-	inputData = dict(request.form)
-	for i in json.loads(dumps(Org_Data.find())):
-		if i['email'] == inputData['email'] and i['password'] == inputData['password']:
-			session['email'] = inputData['email']
-			return render_template('orgdashboard.html')
+	if request.method == "POST":
+		Org_Data = pymongo.collection.Collection(db, 'Org_Data')
+		inputData = dict(request.form)
+		donor = []
+		for i in json.loads(dumps(Org_Data.find())):
+			if i['email'] == inputData['email'] and i['password'] == inputData['password']:
+				session['email'] = inputData['email']
+				print(session["email"])
+				return render_template('orgdashboard.html')
+	if(session["email"]):
+		return render_template("orgdashboard.html")
 	return Response(status=403)
 
 #Org landing page
 @app.route('/org_dash')
 def org_dash():
-    return render_template('orgdashboard.html')
+	if g.email:
+		return render_template("orgdashboard.html")
+	return render_template('orglander.html')
 
 @app.route('/add_new_patient', methods=['POST'])
 def add_new_patient():
@@ -135,33 +152,32 @@ def add_new_patient():
 	patient_Data.insert_one(inputData)
 	return Response(status=200)
 
-@app.before_request
-def before_request():
-    g.email = None
-    if 'email' in session:
-        g.name = session["email"] 
-@app.route("/pat_login",methods = ["POST","GET"])
-def patient_login():
-		if request.method == "POST":
-			pat_Data = pymongo.collection.Collection(db, 'Patient_data')
-			print(pat_Data.find())
-			inputData = dict(request.form)
-			for i in json.loads(dumps(pat_Data.find())):
-				print(i)
-				if i['email'] == inputData['email'] and i['password'] == inputData['password']:
-					print(inputData["email"])
-					session['email'] = inputData['email']
-					return render_template("dashboard.html",user=session["email"])
-		return render_template("pat_login.html")
-@app.route("/dashboard")
-def dashboard():
-    if g.email:
-        return render_template("dashboard.html",user = session["email"])
-    return redirect(url_for("org_lander"))
-@app.route("/signout")
-def signout():
-    session.pop("email",None)
-    return redirect(url_for("org_lander"))
 
+
+@app.route("/accepted/<email>",methods=["GET","POST"])
+def accepted(email):
+	if request.method == "POST":
+		# Form stuff
+		pass
+	
+	all_donors = sc.get_all_donors_from_organization(session["email"])
+	return render_template("donor.html")
+@app.route("/add_blood",methods=["POST"])
+def add_blood():
+	inputData = dict(request.form)
+	Bloodunit_Data = pymongo.collection.Collection(db, 'Bloodunit')
+	b = list(Bloodunit_Data.find().limit(1))
+	if(b == []):
+		Bloodunit_Data.insert_one(inputData)
+	else:
+
+		old_val = int(b[0]["units"])
+		print(old_val)
+		query = {"units":b[0]["units"]}
+		new_update = {"$set":{"units":old_val+int(inputData["units"])}}
+		Bloodunit_Data.update_one(query,new_update)
+		return Response(status=200)
+	
+	
 if __name__=="__main__":
 	app.run(debug=True)
