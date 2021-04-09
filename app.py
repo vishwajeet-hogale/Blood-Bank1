@@ -135,6 +135,21 @@ def get_donors():
         y+=1
     data1['count'] = y
     return data1
+#search_catalogue
+@app.route("/get_bloodgroup",methods=["POST"])
+def get_bloodgroup():
+	blood_unit = pymongo.collection.Collection(db, 'Bloodunit')
+	org = sc.get_organization_by_email(session["email"])
+	data = json.loads(dumps(blood_unit.find({"org":org})))
+	data1 = {}
+	y = 0
+	data1['count'] = 0
+	for x in data:
+		data1["record"+str(y)] = x
+		y+=1
+	data1['count'] = y
+	print(data1)
+	return data1
 #Org login
 @app.route('/org_login', methods=['POST',"GET"])
 def org_login():
@@ -243,7 +258,8 @@ def subtract_blood():
 		else:
 			print("You will only get a part of the blood! Search for another organization")
 			return Response(status=403)
-   
+
+
 	
 	
 if __name__=="__main__":

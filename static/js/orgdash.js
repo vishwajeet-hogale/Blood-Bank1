@@ -1,5 +1,18 @@
 $(function () {
+  $.ajax({
+    url: '/get_bloodgroup',
+    type: 'post',
+    data: "",
+    async: true,
+    success: function (msg) {
+      var count = msg['count'];
+      var r = "record";
+      for (var i = 0; i < count; i++) {
 
+        $("#bloodTable").append("<tr><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['units'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['type'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['org'] + "</td></tr>");
+      }
+    }
+  });
   $.ajax({
     url: '/get_alert',
     type: 'post',
@@ -14,6 +27,7 @@ $(function () {
       }
     }
   });
+
 
   $.ajax({
     url: '/get_donors',
