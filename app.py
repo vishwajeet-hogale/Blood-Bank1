@@ -107,20 +107,34 @@ def get_drive():
 	data1['count'] = y
 	return data1
 
-#Get donors
+# #Get donors
+# @app.route('/get_donors', methods=['POST'])
+# def get_donors():
+# 	Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
+# 	data = json.loads(dumps(Donor_Data.find()))
+# 	data1 = {}
+# 	y = 0
+# 	data1['count'] = 0
+# 	for x in data:
+# 		data1["record"+str(y)] = x
+# 		y+=1
+# 	data1['count'] = y
+# 	return data1
 @app.route('/get_donors', methods=['POST'])
 def get_donors():
-	Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
-	data = json.loads(dumps(Donor_Data.find()))
-	data1 = {}
-	y = 0
-	data1['count'] = 0
-	for x in data:
-		data1["record"+str(y)] = x
-		y+=1
-	data1['count'] = y
-	return data1
-
+    Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
+    Org_Data = pymongo.collection.Collection(db, 'Org_Data')
+    doc=list(Org_Data.find({"email":session["email"]}).limit(1))
+    print(doc)
+    data = json.loads(dumps(Donor_Data.find({"organization":doc[0]["name"]})))
+    data1 = {}
+    y = 0
+    data1['count'] = 0
+    for x in data:
+        data1["record"+str(y)] = x
+        y+=1
+    data1['count'] = y
+    return data1
 #Org login
 @app.route('/org_login', methods=['POST',"GET"])
 def org_login():
