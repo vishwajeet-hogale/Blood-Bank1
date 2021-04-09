@@ -10,7 +10,7 @@ $(function () {
       var r = "record";
       for (var i = 0; i < count; i++) {
 
-        $("#alertTable").append("<tr><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['name'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['type'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['location'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['phone'] + "<td class='body-item mbr-fonts-style display-7'><button><a href='/donate/" + msg[r + i]["name"] + "'>DONATE</a></button></td></tr>");
+        $("#alertTable").append("<tr><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['name'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['type'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['location'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['phone'] + "<td class='body-item mbr-fonts-style display-7'><button><a href='/donate_blood/" + msg[r + i]["name"] + "'>DONATE</a></button></td></tr>");
       }
     }
   });

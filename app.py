@@ -161,27 +161,75 @@ def accepted(email):
 	
 	all_donors = sc.get_all_donors_from_organization(session["email"])
 	return render_template("donor.html",email = session["email"])
+# @app.route("/add_blood",methods=["POST"])
+# def add_blood():
+# 	# print(email)
+# 	inputData = dict(request.form)
+# 	Bloodunit_Data = pymongo.collection.Collection(db, 'Bloodunit')
+# 	type_of_blood = sc.get_donor_bloodgroup_by_email(email=inputData["email"])
+# 	print(type_of_blood)
+# 	b = list(Bloodunit_Data.find({"type":type_of_blood}).limit(1))
+# 	if(b == []):
+		
+# 		Bloodunit_Data.insert_one({"units":int(inputData["units"]),"type":type_of_blood})
+# 		return Response(status=200)
+# 	else:
+
+# 		old_val = int(b[0]["units"])
+		
+# 		query = {"units":int(b[0]["units"]),"type":type_of_blood}
+# 		new_update = {"$set":{"units":old_val+int(inputData["units"])}}
+# 		Bloodunit_Data.update_one(query,new_update)
+# 		return Response(status=200)
+# 	return Response(status=403)
 @app.route("/add_blood",methods=["POST"])
 def add_blood():
-	# print(email)
-	inputData = dict(request.form)
-	Bloodunit_Data = pymongo.collection.Collection(db, 'Bloodunit')
-	type_of_blood = sc.get_donor_bloodgroup_by_email(email=inputData["email"])
-	print(type_of_blood)
-	b = list(Bloodunit_Data.find({"type":type_of_blood}).limit(1))
-	if(b == []):
-		
-		Bloodunit_Data.insert_one({"units":inputData["units"],"type":type_of_blood})
-		return Response(status=200)
-	else:
+    # print(email)
+    inputData = dict(request.form)
+    Bloodunit_Data = pymongo.collection.Collection(db, 'Bloodunit')
+    type_of_blood = sc.get_donor_bloodgroup_by_email(email=inputData["email"])
+    print(type_of_blood)
+    Org_Data = pymongo.collection.Collection(db, 'Org_Data')
+    doc=list(Org_Data.find({"email":session["email"]}).limit(1))
+    b = list(Bloodunit_Data.find({"type":type_of_blood,"org":doc[0]["name"]}).limit(1))
+    print(b)
+    if(b == []):
 
+        Bloodunit_Data.insert_one({"units":inputData["units"],"type":type_of_blood,"org":inputData["org"]})
+        return Response(status=200)
+    else:
+
+        old_val = int(b[0]["units"])
+
+        query = {"units":b[0]["units"],"type":type_of_blood,"org":inputData["org"]}
+        new_update = {"$set":{"units":old_val+int(inputData["units"])}}
+        Bloodunit_Data.update_one(query,new_update)
+        return Response(status=200)
+@app.route("/donate_blood/<email>")
+def donate_blood(email):
+    return render_template("subtract.html",name = email)
+
+@app.route("/subtract_blood",methods=["POST"])
+def subtract_blood():
+	inputData = dict(request.form)
+	blood_unit = pymongo.collection.Collection(db,'Bloodunit')
+	org = sc.get_organization_by_email(session["email"])
+	b = list(blood_unit.find({"type":inputData["type"],"org":org}).limit(1))
+	if(b == []):
+		print("Blood not available")
+		return Response(status=403)
+	else:
+		print(b[0])
 		old_val = int(b[0]["units"])
-		
-		query = {"units":b[0]["units"],"type":type_of_blood}
-		new_update = {"$set":{"units":old_val+int(inputData["units"])}}
-		Bloodunit_Data.update_one(query,new_update)
-		return Response(status=200)
-	
+		if(old_val >= int(inputData["units"])):
+			query = {"units":int(b[0]["units"]),"type":inputData["type"],"org":org}
+			new_update = {"$set":{"units":old_val-int(inputData["units"])}}
+			blood_unit.update_one(query,new_update)
+			return Response(status=200)
+		else:
+			print("You will only get a part of the blood! Search for another organization")
+			return Response(status=403)
+   
 	
 	
 if __name__=="__main__":
