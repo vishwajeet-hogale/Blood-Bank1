@@ -161,9 +161,11 @@ def org_login():
 			if i['email'] == inputData['email'] and i['password'] == inputData['password']:
 				session['email'] = inputData['email']
 				print(session["email"])
-				return render_template('orgdashboard.html')
+				org = sc.get_organization_by_email(session["email"])
+				return render_template('orgdashboard.html',org=org)
 	if(session["email"]):
-		return render_template("orgdashboard.html")
+		org = sc.get_organization_by_email(session["email"])
+		return render_template('orgdashboard.html',org=org)
 	return Response(status=403)
 
 #Org landing page
