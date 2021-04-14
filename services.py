@@ -22,7 +22,13 @@ def convert_donor_tuple(data):
 def get_organization_by_email(email:str):
 	Org_Data = pymongo.collection.Collection(db, 'Org_Data')
 	data = json.loads(dumps(Org_Data.find({"email":email})))
+	print(data)
 	return data[0]["name"]
+def get_donor_organization_by_email(email:str):
+	Org_Data = pymongo.collection.Collection(db, 'Donor_Data')
+	data = json.loads(dumps(Org_Data.find({"email":email})))
+	print(data)
+	return data[0]["organization"]
 def get_all_donors_from_organization(email:str):
 	org = get_organization_by_email(email)
 	Donor_data = pymongo.collection.Collection(db, 'Donor_Data')

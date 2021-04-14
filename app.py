@@ -233,13 +233,13 @@ def add_blood():
     print(b)
     if(b == []):
 
-        Bloodunit_Data.insert_one({"units":inputData["units"],"type":type_of_blood,"org":inputData["org"]})
+        Bloodunit_Data.insert_one({"units":int(inputData["units"]),"type":type_of_blood,"org":sc.get_donor_organization_by_email(inputData["email"])})
         return Response(status=200)
     else:
 
         old_val = int(b[0]["units"])
 
-        query = {"units":b[0]["units"],"type":type_of_blood,"org":sc.get_organization_by_email(inputData["email"])}
+        query = {"units":int(b[0]["units"]),"type":type_of_blood,"org":sc.get_donor_organization_by_email(inputData["email"])}
         new_update = {"$set":{"units":old_val+int(inputData["units"])}}
         Bloodunit_Data.update_one(query,new_update)
         return Response(status=200)
