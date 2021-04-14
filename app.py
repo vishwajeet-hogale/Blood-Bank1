@@ -239,7 +239,7 @@ def add_blood():
 
         old_val = int(b[0]["units"])
 
-        query = {"units":b[0]["units"],"type":type_of_blood,"org":inputData["org"]}
+        query = {"units":b[0]["units"],"type":type_of_blood,"org":sc.get_organization_by_email(inputData["email"])}
         new_update = {"$set":{"units":old_val+int(inputData["units"])}}
         Bloodunit_Data.update_one(query,new_update)
         return Response(status=200)
@@ -272,4 +272,4 @@ def subtract_blood():
 	
 	
 if __name__=="__main__":
-	app.run(debug=False)
+	app.run(debug=True)
