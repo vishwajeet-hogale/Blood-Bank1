@@ -1,7 +1,7 @@
 # Blood Bank Management System (Blood Bridge)
-    This project was made as a part of the coursework for OOAD.
-    As the name suggest this is a project that simulates the working of a blood bank. 
-    Donors can donate blood at any organization and patients can use the blood from any of these organizations.
+This project was made as a part of the coursework for OOAD.
+As the name suggest this is a project that simulates the working of a blood bank. 
+Donors can donate blood at any organization and patients can use the blood from any of these organizations.
 
 ### Various functionalities of the project
    * Donor Registration 
