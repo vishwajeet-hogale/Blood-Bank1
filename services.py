@@ -54,7 +54,7 @@ def check_for_valid_bloodgroup(group:str):
 def check_for_valid_email(email:str):
 	regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
 	if(re.search(regex, email)):
-        return True
+		return True
 	return False
 def check_for_valid_phno(number:str):
 	if len(number) == 10:

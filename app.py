@@ -60,9 +60,9 @@ def org_lander():
 #Add new org
 @app.route('/add_new_org', methods=['POST'])
 def add_new_org():
-    Org_Data = pymongo.collection.Collection(db, 'Org_Data')
-    inputData = dict(request.form)
-	if(sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"]):)
+	Org_Data = pymongo.collection.Collection(db, 'Org_Data')
+	inputData = dict(request.form)
+	if(sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"]) and sc.get_org_by_email_for_duplicate(inputData["email"])):
 		for i in json.loads(dumps(Org_Data.find())):
 			if i['email'] == inputData['email']:
 				return Response(status=304)
