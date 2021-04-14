@@ -60,3 +60,9 @@ def check_for_valid_phno(number:str):
 	if len(number) == 10:
 		return True
 	return False
+def check_valid_org(org:str):
+	org_data = pymongo.collection.Collection(db,"Org_Data")
+	data = list(org_data.find({"name":org}))
+	if(data == []):
+		return True
+	return False

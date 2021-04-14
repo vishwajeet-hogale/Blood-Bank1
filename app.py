@@ -36,7 +36,7 @@ def map_page():
 def add_new_user():
 	inputData = dict(request.form)
 	Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
-	if(sc.check_for_valid_bloodgroup(inputData["bloodgroup"]) and sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"])):
+	if(sc.check_valid_org(inputData["organization"]) and sc.check_for_valid_bloodgroup(inputData["bloodgroup"]) and sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"])):
 		if sc.get_donor_by_email(inputData["email"]) :
 			Donor_Data.insert_one(inputData)
 			return Response(status=200)
@@ -272,4 +272,4 @@ def subtract_blood():
 	
 	
 if __name__=="__main__":
-	app.run(debug=True)
+	app.run(debug=False)
