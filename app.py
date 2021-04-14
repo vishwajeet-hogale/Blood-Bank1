@@ -267,7 +267,17 @@ def subtract_blood():
 		else:
 			print("You will only get a part of the blood! Search for another organization")
 			return Response(status=403)
-
+@app.route("/update/<email>")
+def update(email):
+	return render_template("update.html")
+@app.route("/update",methods=["POST"])
+def update_user():
+	if request.method == "POST":
+		inputData = dict(request.form)
+		update = pymongo.collection.Collection(db,"Donor_Data")
+		update.replace_one({"email":inputData["email"]},inputData)
+		return Response(status=200)
+	
 
 	
 	

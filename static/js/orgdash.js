@@ -38,7 +38,7 @@ $(function () {
       var count = msg['count'];
       var r = "record";
       for (var i = 0; i < count; i++) {
-        $("#donorTable").append("<tr><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['name'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['email'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['phone'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['bloodgroup'] + "<td class='body-item mbr-fonts-style display-7'><button><a href='/accepted/" + msg[r + i]["email"] + "'>ACCEPTED</a></button></td></tr>");
+        $("#donorTable").append("<tr><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['name'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['email'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['phone'] + "</td><td class='body-item mbr-fonts-style display-7'>" + msg[r + i]['bloodgroup'] + "<td class='body-item mbr-fonts-style display-7'><button><a href='/accepted/" + msg[r + i]["email"] + "'>ACCEPTED</a></button>"+"<button><a href='/update/" + msg[r + i]["email"] + "'>Update</a></button></td></tr>");
       }
     }
   });
