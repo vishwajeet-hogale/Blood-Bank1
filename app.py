@@ -36,8 +36,11 @@ def map_page():
 def add_new_user():
     inputData = dict(request.form)
     Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
-    Donor_Data.insert_one(inputData)
-    return Response(status=200)
+	if (sc.get_donor_by_email(inputData["email"])):
+		Donor_Data.insert_one(inputData)
+		return Response(status=200)
+	print("Already exists!")
+	return Response(status=304)
 @app.before_request  #The before_request decorator allows us to create a function that will run before each request.
 def before_request():
     g.email = None
@@ -225,7 +228,7 @@ def add_blood():
     b = list(Bloodunit_Data.find({"type":type_of_blood,"org":doc[0]["name"]}).limit(1))
     print(b)
     if(b == []):
-
+		
         Bloodunit_Data.insert_one({"units":inputData["units"],"type":type_of_blood,"org":inputData["org"]})
         return Response(status=200)
     else:
