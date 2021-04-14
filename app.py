@@ -36,7 +36,7 @@ def map_page():
 def add_new_user():
 	inputData = dict(request.form)
 	Donor_Data = pymongo.collection.Collection(db, 'Donor_Data')
-	if(sc.check_for_valid_bloodgroup(inputData["bloodgroup"])):
+	if(sc.check_for_valid_bloodgroup(inputData["bloodgroup"]) and sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"])):
 		if sc.get_donor_by_email(inputData["email"]) :
 			Donor_Data.insert_one(inputData)
 			return Response(status=200)
@@ -62,11 +62,13 @@ def org_lander():
 def add_new_org():
     Org_Data = pymongo.collection.Collection(db, 'Org_Data')
     inputData = dict(request.form)
-    for i in json.loads(dumps(Org_Data.find())):
-        if i['email'] == inputData['email']:
-            return Response(status=304)
-    Org_Data.insert_one(inputData)
-    return Response(status=200)
+	if(sc.check_for_valid_email(inputData["email"]) and sc.check_for_valid_phno(inputData["phone"]):)
+		for i in json.loads(dumps(Org_Data.find())):
+			if i['email'] == inputData['email']:
+				return Response(status=304)
+		Org_Data.insert_one(inputData)
+		return Response(status=200)
+	return Response(status=403)
 
 #Add new alert
 @app.route('/add_new_alert', methods=['POST'])

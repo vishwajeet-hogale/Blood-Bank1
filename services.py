@@ -3,7 +3,7 @@ import pymongo
 import json
 from bson.json_util import dumps
 # mongo = pymongo.MongoClient("mongodb+srv://vishwajeet:Mjklop@cluster0.pkcgw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
-
+import re
 # db = mongo["Blood-Bank"]
 blood_groups = ["A","B","O","AB"]
 def convert_donor_tuple(data):
@@ -51,4 +51,12 @@ def check_for_valid_bloodgroup(group:str):
 		if(group[0].strip().upper() == i):
 			return True
 	return False
-
+def check_for_valid_email(email:str):
+	regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+	if(re.search(regex, email)):
+        return True
+	return False
+def check_for_valid_phno(number:str):
+	if len(number) == 10:
+		return True
+	return False
