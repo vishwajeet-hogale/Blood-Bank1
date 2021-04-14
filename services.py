@@ -38,14 +38,14 @@ def get_donor_by_email(email:str):
 	data = pymongo.collection.Collection(db,'Donor_Data')
 	donor = list(data.find({"email":email}))
 	if(donor == []):
-		return False
-	return True
+		return True
+	return False
 def get_org_by_email_for_duplicate(email:str):
 	data = pymongo.collection.Collection(db,'Org_Data')
 	org = list(data.find({"email":email}))
 	if(org == []):
-		return False
-	return True
+		return True
+	return False
 def check_for_valid_bloodgroup(group:str):
 	for i in blood_groups:
 		if(group[0].strip().upper() == i):
